@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Estudiantes</title>
-    <!-- Aquí conectamos el CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,7 +11,6 @@
     <h1>Registro de Alumnos</h1>
 
     <div class="layout">
-        <!-- Columna principal: formulario + tabla -->
         <div>
             <div class="tarjeta">
                 <form id="formAlumno">
@@ -59,8 +57,6 @@
                         </div>
                     </div>
 
-                    <!-- Importante: Quité el onclick="registrarAlumno()" de aquí. 
-                         Lo vamos a manejar desde JavaScript con un EventListener. -->
                     <button type="button" id="btnGuardar">
                         Guardar Alumno en Memoria
                     </button>
@@ -80,14 +76,12 @@
                         </tr>
                     </thead>
                     <tbody id="cuerpoTabla">
-                        <!-- filas generadas por JS -->
                     </tbody>
                 </table>
                 <p id="mensajeVacio" class="vacio">Aún no hay alumnos registrados.</p>
             </div>
         </div>
 
-        <!-- Columna lateral: estadísticas -->
         <div>
             <div class="tarjeta">
                 <div class="stat">
@@ -131,7 +125,6 @@
         </div>
     </div>
 
-    <!-- Aquí conectamos el JS. OJO: type="module" es vital para Firebase después -->
     <script type="module" src="app.js"></script>
 </body>
 </html>

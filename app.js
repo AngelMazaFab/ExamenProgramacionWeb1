@@ -1,8 +1,6 @@
-// 1. Importamos las funciones desde el CDN de Firebase (Versión 10.8.1)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// 2. Tu configuración de Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCgxarxe1ue8DOgUI3ldbzDv0Mlpyr0jDc",
   authDomain: "examenprogramacionweb1.firebaseapp.com",
@@ -12,37 +10,24 @@ const firebaseConfig = {
   appId: "1:558488834978:web:a6b7349f6b44e8e52fd8fb"
 };
 
-// 3. Inicializamos la aplicación con tus credenciales
 const app = initializeApp(firebaseConfig);
 
-// 4. Inicializamos la conexión a la base de datos
 const db = getFirestore(app);
 
-
-// ==========================================
-//        VARIABLES Y ESTADO GLOBAL
-// ==========================================
 let alumnos = [];
 
 
-// ==========================================
-//    CONEXIÓN EN TIEMPO REAL (onSnapshot)
-// ==========================================
 
-// Apuntamos a tu colección en Firebase
 const referenciaColeccion = collection(db, "alumnos");
 
-// Abrimos el "micrófono" para escuchar cambios en la base de datos
 onSnapshot(referenciaColeccion, (snapshot) => {
-    // Vaciamos el array local para no duplicar información en la tabla
     alumnos = [];
 
-    // Recorremos los documentos que nos manda Firebase
     snapshot.forEach((doc) => {
         const datosAlumno = doc.data();
         
         alumnos.push({
-            id: doc.id, // Guardamos el ID de Firebase (clave para eliminar después)
+            id: doc.id,
             nombre: datosAlumno.nombre,
             notas: datosAlumno.notas,
             asistencia: datosAlumno.asistencia,
@@ -52,21 +37,14 @@ onSnapshot(referenciaColeccion, (snapshot) => {
         });
     });
 
-    // Dibujamos la tabla con los datos actualizados desde la nube
     renderizar();
 });
-
-
-// ==========================================
-//          LÓGICA DE LA APLICACIÓN
-// ==========================================
 
 function promedioNotas(notas) {
     if (!notas.length) return 0;
     return notas.reduce((a, b) => a + b, 0) / notas.length;
 }
 
-// Agregamos la palabra 'async' para indicar que esta función maneja procesos con tiempo de espera
 async function registrarAlumno() {
     const nombre = document.getElementById('nombreAlumno').value.trim();
     const notasTexto = document.getElementById('calificaciones').value;
@@ -79,7 +57,6 @@ async function registrarAlumno() {
     const turnoInput = document.querySelector('input[name="turno"]:checked');
     const proyectoEntregado = document.getElementById('proyectoEntregado').checked;
 
-    // Validaciones
     if (!nombre) {
         alert('Escribe el nombre del alumno.');
         return;
@@ -98,7 +75,6 @@ async function registrarAlumno() {
     }
 
     try {
-        // Apuntamos a la colección y guardamos el documento
         const refColeccion = collection(db, "alumnos");
         
         await addDoc(refColeccion, {
@@ -119,8 +95,6 @@ async function registrarAlumno() {
     }
 }
 
-// OJO: Esta función todavía usa la lógica vieja en memoria (splice). 
-// La actualizaremos en el siguiente paso.
 window.eliminarAlumno = function(indice) {
     alumnos.splice(indice, 1);
     renderizar();
@@ -151,7 +125,6 @@ function renderizar() {
 function actualizarEstadisticas() {
     const total = alumnos.length;
 
-    // Promedio grupal
     const promedioGrupalEl = document.getElementById('promedioGrupal');
     if (total === 0) {
         promedioGrupalEl.textContent = '--';
@@ -161,7 +134,6 @@ function actualizarEstadisticas() {
         promedioGrupalEl.textContent = promedioGrupal.toFixed(2);
     }
 
-    // Mejor alumno 
     const mejorEstudianteEl = document.getElementById('mejorEstudiante');
     if (total === 0) {
         mejorEstudianteEl.textContent = '--';
@@ -178,7 +150,6 @@ function actualizarEstadisticas() {
         mejorEstudianteEl.textContent = '👑 ' + mejor.nombre;
     }
 
-    // Entregas de proyecto
     const porcentajeProyectosEl = document.getElementById('porcentajeProyectos');
     if (total === 0) {
         porcentajeProyectosEl.textContent = '--';
@@ -187,13 +158,11 @@ function actualizarEstadisticas() {
         porcentajeProyectosEl.textContent = Math.round((entregados / total) * 100) + '%';
     }
 
-    // Distribución por turno
     const totalManana = alumnos.filter(a => a.turno === 'Mañana').length;
     const totalTarde = alumnos.filter(a => a.turno === 'Tarde').length;
     document.getElementById('totalManana').textContent = totalManana;
     document.getElementById('totalTarde').textContent = totalTarde;
 
-    // Alumnos aprobados
     const aprobados = alumnos.filter(a =>
         promedioNotas(a.notas) >= 6 &&
         a.proyectoEntregado &&
@@ -206,7 +175,4 @@ function actualizarEstadisticas() {
 }
 
 
-// ==========================================
-//             INICIALIZACIÓN
-// ==========================================
 document.getElementById('btnGuardar').addEventListener('click', registrarAlumno);
