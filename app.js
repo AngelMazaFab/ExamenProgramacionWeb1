@@ -1,11 +1,73 @@
+// 1. Importamos las funciones desde el CDN de Firebase (Versión 10.8.1)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+// 2. Tu configuración de Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCgxarxe1ue8DOgUI3ldbzDv0Mlpyr0jDc",
+  authDomain: "examenprogramacionweb1.firebaseapp.com",
+  projectId: "examenprogramacionweb1",
+  storageBucket: "examenprogramacionweb1.firebasestorage.app",
+  messagingSenderId: "558488834978",
+  appId: "1:558488834978:web:a6b7349f6b44e8e52fd8fb"
+};
+
+// 3. Inicializamos la aplicación con tus credenciales
+const app = initializeApp(firebaseConfig);
+
+// 4. Inicializamos la conexión a la base de datos
+const db = getFirestore(app);
+
+
+// ==========================================
+//        VARIABLES Y ESTADO GLOBAL
+// ==========================================
 let alumnos = [];
+
+
+// ==========================================
+//    CONEXIÓN EN TIEMPO REAL (onSnapshot)
+// ==========================================
+
+// Apuntamos a tu colección en Firebase
+const referenciaColeccion = collection(db, "alumnos");
+
+// Abrimos el "micrófono" para escuchar cambios en la base de datos
+onSnapshot(referenciaColeccion, (snapshot) => {
+    // Vaciamos el array local para no duplicar información en la tabla
+    alumnos = [];
+
+    // Recorremos los documentos que nos manda Firebase
+    snapshot.forEach((doc) => {
+        const datosAlumno = doc.data();
+        
+        alumnos.push({
+            id: doc.id, // Guardamos el ID de Firebase (clave para eliminar después)
+            nombre: datosAlumno.nombre,
+            notas: datosAlumno.notas,
+            asistencia: datosAlumno.asistencia,
+            grado: datosAlumno.grado,
+            turno: datosAlumno.turno,
+            proyectoEntregado: datosAlumno.proyectoEntregado
+        });
+    });
+
+    // Dibujamos la tabla con los datos actualizados desde la nube
+    renderizar();
+});
+
+
+// ==========================================
+//          LÓGICA DE LA APLICACIÓN
+// ==========================================
 
 function promedioNotas(notas) {
     if (!notas.length) return 0;
     return notas.reduce((a, b) => a + b, 0) / notas.length;
 }
 
-function registrarAlumno() {
+// Agregamos la palabra 'async' para indicar que esta función maneja procesos con tiempo de espera
+async function registrarAlumno() {
     const nombre = document.getElementById('nombreAlumno').value.trim();
     const notasTexto = document.getElementById('calificaciones').value;
     const notas = notasTexto
@@ -17,6 +79,7 @@ function registrarAlumno() {
     const turnoInput = document.querySelector('input[name="turno"]:checked');
     const proyectoEntregado = document.getElementById('proyectoEntregado').checked;
 
+    // Validaciones
     if (!nombre) {
         alert('Escribe el nombre del alumno.');
         return;
@@ -34,22 +97,30 @@ function registrarAlumno() {
         return;
     }
 
-    alumnos.push({
-        nombre,
-        notas,
-        asistencia,
-        grado,
-        turno: turnoInput.value,
-        proyectoEntregado
-    });
+    try {
+        // Apuntamos a la colección y guardamos el documento
+        const refColeccion = collection(db, "alumnos");
+        
+        await addDoc(refColeccion, {
+            nombre: nombre,
+            notas: notas,
+            asistencia: asistencia,
+            grado: grado,
+            turno: turnoInput.value,
+            proyectoEntregado: proyectoEntregado
+        });
 
-    document.getElementById('formAlumno').reset();
-    renderizar();
+        console.log("¡Alumno guardado exitosamente en Firestore!");
+        document.getElementById('formAlumno').reset();
+        
+    } catch (error) {
+        console.error("Error al guardar el alumno: ", error);
+        alert("Hubo un error al guardar en la base de datos.");
+    }
 }
 
-// Necesitamos exponer esta función globalmente para que el HTML pueda acceder a ella temporalmente,
-// porque en HTML tienes onclick="eliminarAlumno(${i})". 
-// Más adelante, cuando migremos a Firebase, también mejoraremos esta forma de eliminar.
+// OJO: Esta función todavía usa la lógica vieja en memoria (splice). 
+// La actualizaremos en el siguiente paso.
 window.eliminarAlumno = function(indice) {
     alumnos.splice(indice, 1);
     renderizar();
@@ -134,6 +205,8 @@ function actualizarEstadisticas() {
         .join('');
 }
 
-// Inicialización
+
+// ==========================================
+//             INICIALIZACIÓN
+// ==========================================
 document.getElementById('btnGuardar').addEventListener('click', registrarAlumno);
-renderizar();
