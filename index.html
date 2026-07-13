@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Estudiantes</title>
+    <!-- Aquí conectamos el CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Registro de Alumnos</h1>
+
+    <div class="layout">
+        <!-- Columna principal: formulario + tabla -->
+        <div>
+            <div class="tarjeta">
+                <form id="formAlumno">
+                    <div class="fila">
+                        <div>
+                            <label for="nombreAlumno">Nombre</label>
+                            <input type="text" id="nombreAlumno" placeholder="Ej: Sofía">
+                        </div>
+                        <div>
+                            <label for="calificaciones">Calificaciones (separadas por comas)</label>
+                            <input type="text" id="calificaciones" placeholder="Ej: 8, 9, 10">
+                        </div>
+                    </div>
+
+                    <div class="fila">
+                        <div>
+                            <label for="porcentajeAsistencia">Porcentaje de asistencia</label>
+                            <input type="number" id="porcentajeAsistencia" min="0" max="100" placeholder="Ej: 85">
+                        </div>
+                        <div>
+                            <label for="grado">Grado escolar</label>
+                            <select id="grado">
+                                <option value="4° Primaria">4° Primaria</option>
+                                <option value="5° Primaria" selected>5° Primaria</option>
+                                <option value="6° Primaria">6° Primaria</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="fila">
+                        <div>
+                            <label>Turno asignado</label>
+                            <div class="turno-opciones">
+                                <label><input type="radio" name="turno" value="Mañana" checked> ☀️ Mañana</label>
+                                <label><input type="radio" name="turno" value="Tarde"> 🌙 Tarde</label>
+                            </div>
+                        </div>
+                        <div class="check-proyecto">
+                            <label style="margin-top: 18px;">
+                                <input type="checkbox" id="proyectoEntregado">
+                                ¿Proyecto entregado?
+                            </label>
+                            <small>Mandatorio para poder aprobar</small>
+                        </div>
+                    </div>
+
+                    <!-- Importante: Quité el onclick="registrarAlumno()" de aquí. 
+                         Lo vamos a manejar desde JavaScript con un EventListener. -->
+                    <button type="button" id="btnGuardar">
+                        Guardar Alumno en Memoria
+                    </button>
+                </form>
+            </div>
+
+            <div class="tarjeta">
+                <table id="tablaAlumnos">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Grado/Turno</th>
+                            <th>Calificaciones</th>
+                            <th>Asistencia</th>
+                            <th>Proyecto</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTabla">
+                        <!-- filas generadas por JS -->
+                    </tbody>
+                </table>
+                <p id="mensajeVacio" class="vacio">Aún no hay alumnos registrados.</p>
+            </div>
+        </div>
+
+        <!-- Columna lateral: estadísticas -->
+        <div>
+            <div class="tarjeta">
+                <div class="stat">
+                    <span class="stat-titulo">Promedio grupal</span>
+                    <span class="stat-valor" id="promedioGrupal">--</span>
+                </div>
+                <div class="stat-prop">propiedad: promedioGrupal</div>
+
+                <div class="stat">
+                    <span class="stat-titulo">Mejor alumno</span>
+                    <span class="stat-valor" id="mejorEstudiante">--</span>
+                </div>
+                <div class="stat-prop">propiedad: mejorEstudiante</div>
+
+                <div class="stat">
+                    <span class="stat-titulo">Entregas de proyecto</span>
+                    <span class="stat-valor" id="porcentajeProyectos">--</span>
+                </div>
+                <div class="stat-prop">propiedad: porcentajeProyectos</div>
+
+                <div class="stat-titulo" style="margin-bottom: 8px;">Distribución por turno</div>
+                <div class="turnos-resumen">
+                    <div>
+                        <span id="totalManana">0</span>
+                        Mañana
+                    </div>
+                    <div>
+                        <span id="totalTarde">0</span>
+                        Tarde
+                    </div>
+                </div>
+                <div class="stat-prop">propiedad: resumenTurnos</div>
+
+                <div class="stat">
+                    <span class="stat-titulo">Alumnos aprobados</span>
+                    <span class="stat-valor" id="totalAprobados">0</span>
+                </div>
+                <div class="stat-prop">propiedad: aprobados []</div>
+                <div class="aprobados-lista" id="listaAprobados"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aquí conectamos el JS. OJO: type="module" es vital para Firebase después -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

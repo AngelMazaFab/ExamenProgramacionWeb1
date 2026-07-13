@@ -1,0 +1,210 @@
+:root {
+    --azul: #2563eb;
+    --azul-suave: #eff6ff;
+    --verde: #16a34a;
+    --rojo: #dc2626;
+    --ambar: #d97706;
+    --texto: #1e293b;
+    --texto-suave: #64748b;
+    --borde: #e2e8f0;
+    --fondo: #f1f5f9;
+    --tarjeta: #ffffff;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background: var(--fondo);
+    color: var(--texto);
+    padding: 24px;
+}
+
+h1 {
+    font-size: 1.4rem;
+    margin: 0 0 20px;
+}
+
+.layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: start;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tarjeta {
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+}
+
+.fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+}
+
+input:focus, select:focus {
+    outline: 2px solid var(--azul);
+    outline-offset: 1px;
+}
+
+.turno-opciones {
+    display: flex;
+    gap: 24px;
+}
+
+.turno-opciones label,
+.check-proyecto label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    text-transform: none;
+    font-weight: 500;
+    color: var(--texto);
+    cursor: pointer;
+}
+
+.check-proyecto small {
+    display: block;
+    font-weight: 400;
+    color: var(--texto-suave);
+    margin-top: 2px;
+}
+
+button#btnGuardar {
+    width: 100%;
+    background: var(--azul);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+}
+
+button#btnGuardar:hover { background: #1d4ed8; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+th {
+    text-align: left;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--texto-suave);
+    padding: 8px 10px;
+    border-bottom: 2px solid var(--borde);
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: top;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge.ok { color: var(--verde); }
+.badge.no { color: var(--rojo); }
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: var(--rojo);
+    font-size: 1.05rem;
+    cursor: pointer;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 4px;
+}
+
+.stat-titulo {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--texto-suave);
+}
+
+.stat-valor {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.stat-prop {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-family: monospace;
+    margin-bottom: 10px;
+}
+
+.turnos-resumen {
+    display: flex;
+    gap: 24px;
+}
+
+.turnos-resumen div { text-align: center; }
+.turnos-resumen span { display: block; font-size: 1.2rem; font-weight: 700; }
+
+.aprobados-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 6px;
+}
+
+.aprobados-lista span {
+    color: var(--verde);
+    font-size: 0.9rem;
+}
+
+.vacio {
+    color: var(--texto-suave);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 16px 0;
+}
